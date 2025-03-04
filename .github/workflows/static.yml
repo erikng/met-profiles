@@ -31,6 +31,10 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Install dependencies
         run: npm install
+      - name: Run profile generation script
+        run: |
+          cd ${{ github.workspace }}
+          node generateprofiles-alt.js
       - name: Build with VitePress
         run: npm run build
       - name: Upload artifact
