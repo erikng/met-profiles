@@ -42,7 +42,7 @@ const sendProfile = async () => {
     return;
   }
 
-  const apiUrl = \`http://\${baseUrl.value}/api/v1/profile/save\`;
+  const apiUrl = \`https://\${baseUrl.value}/api/v1/profile/save\`;
 
   try {
     const response = await fetch(apiUrl, {
