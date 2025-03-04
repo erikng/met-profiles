@@ -25,14 +25,15 @@ async function generateProfilePages() {
 
         // Replace spaces with hyphens for filenames
         const fileName = file.replace('.json', '').replace(/\s+/g, '-');
-        const profilePagePath = join(profilesDir, `${fileName}.md`);
+        const profileTitle = fileName.replace(/---+/g, ' - ').replace(/(?<!\s)(-+)(?!\s)/g, ' ').trim(); // Replace multiple hyphens with a single space
 
         // Generate Markdown file for the profile
-        const profileContent = `# ${fileName}\n\n\`\`\`json\n${jsonData}\n\`\`\`\n`;
+        const profileContent = `# ${profileTitle}\n\n\`\`\`json\n${jsonData}\n\`\`\`\n`;
+        const profilePagePath = join(profilesDir, `${fileName}.md`);
         await writeFile(profilePagePath, profileContent);
 
         // Add link to index.md (encode URI)
-        indexContent += `- [${fileName}](profiles/${encodeURIComponent(fileName)}.md)\n`;
+        indexContent += `- [${profileTitle}](profiles/${fileName}.md)\n`;
       }
     }
 
