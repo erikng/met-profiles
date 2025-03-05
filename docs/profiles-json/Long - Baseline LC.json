@@ -1,6 +1,6 @@
 {
   "name": "Low Contact",
-  "id": "56437db5-178b-4d25-9cb0-fc320e571be0",
+  "id": "9ac1a637-9092-4aa2-a035-bcdf5df932db",
   "author": "John Barry",
   "author_id": "d9123a0a-d3d7-40fd-a548-b81376e43f23",
   "previous_authors": [
@@ -17,13 +17,13 @@
       "name": "Fill Pressure",
       "key": "pressure_1",
       "type": "pressure",
-      "value": 3.0
+      "value": 3
     },
     {
       "name": "Extract Pressure",
       "key": "pressure_2",
       "type": "pressure",
-      "value": 4.0
+      "value": 4
     }
   ],
   "stages": [
@@ -95,12 +95,11 @@
         "over": "time",
         "interpolation": "linear"
       },
-      "exit_triggers": [
-      ],
+      "exit_triggers": [],
       "limits": [
         {
           "type": "flow",
-          "value": 6.0
+          "value": 6
         }
       ]
     }

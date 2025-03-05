@@ -1,6 +1,6 @@
 {
   "name": "Medium Contact",
-  "id": "56437db5-178b-4d25-9cb0-fc320e571be0",
+  "id": "ed8b4caf-ca45-42c1-8119-b97e30097e55",
   "author": "John Barry",
   "author_id": "d9123a0a-d3d7-40fd-a548-b81376e43f23",
   "previous_authors": [
@@ -22,13 +22,13 @@
       "name": "Fill Pressure",
       "key": "pressure_1",
       "type": "pressure",
-      "value": 4.0
+      "value": 4
     },
     {
       "name": "Extract Pressure",
       "key": "pressure_2",
       "type": "pressure",
-      "value": 6.0
+      "value": 6
     }
   ],
   "stages": [
@@ -79,7 +79,7 @@
         },
         {
           "type": "pressure",
-          "value": 2.0,
+          "value": 2,
           "relative": false,
           "comparison": "<="
         }
@@ -100,12 +100,11 @@
         "over": "time",
         "interpolation": "linear"
       },
-      "exit_triggers": [
-      ],
+      "exit_triggers": [],
       "limits": [
         {
           "type": "flow",
-          "value": 4.0
+          "value": 4
         }
       ]
     }

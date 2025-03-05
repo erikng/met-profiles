@@ -1,6 +1,6 @@
 {
   "name": "Ultra Low Contact",
-  "id": "56437db5-178b-4d25-9cb0-fc320e571be0",
+  "id": "274bed4e-fa55-4a89-87ce-fa8dcc96394d",
   "author": "John Barry",
   "author_id": "d9123a0a-d3d7-40fd-a548-b81376e43f23",
   "previous_authors": [
@@ -83,10 +83,8 @@
         "over": "time",
         "interpolation": "linear"
       },
-      "exit_triggers": [
-      ],
-      "limits": [
-      ]
+      "exit_triggers": [],
+      "limits": []
     }
   ]
 }
