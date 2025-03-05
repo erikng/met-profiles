@@ -5,5 +5,5 @@ import { defineConfig } from 'vitepress'
 export default {
     title: "Meticulous Profiles",
     description: "A site powered by VitePress",
-    base: "/met-profiles/"
+    base: "/"
 }
