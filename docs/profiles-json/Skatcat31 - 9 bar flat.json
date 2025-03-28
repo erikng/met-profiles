@@ -23,11 +23,19 @@
       "key": "pressure_1",
       "type": "pressure",
       "value": 9
+    },
+    {
+      "name": "Thor's Water Hammer Flow",
+      "key": "flow_1",
+      "type": "flow",
+      "value": 8.1
     }
   ],
   "display": {
     "image": "/api/v1/profile/image/f98ff6e029e70ee9a99565796615d55c.png",
-    "accentColor": "#105098"
+    "accentColor": "#105098",
+    "shortDescription": "use as a starting point to evaluate grind size diff btw pump machine and Meticulous",
+    "description": "This profile slams the puck with 9 bar of pressure, and limits flow btw 0 and 8.1 ml/sec.  It is intended to be used as a tool / starting point to evaluate grind size changes needed between your pump machine and the Meticulous, as most people using the Meticulous need to grind finer to get higher pressures."
   },
   "stages": [
     {
@@ -35,7 +43,7 @@
       "type": "flow",
       "dynamics": {
         "points": [
-          [0, 8.1]
+          [0, "$flow_1"]
         ],
         "over": "time",
         "interpolation": "linear"
@@ -44,7 +52,7 @@
       "limits": [
         {
           "type": "pressure",
-          "value": 9
+          "value": "$pressure_1"
         }
       ],
       "key": "flow_1"
