@@ -170,7 +170,7 @@ function convert() {
   function generateUniqueId() {
     return 'xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx'.replace(/[x]/g, () => (Math.random() * 16 | 0).toString(16));
   }
-  
+
   const targetJson = {
     name: title,
     id: generateUniqueId(),
@@ -182,8 +182,8 @@ function convert() {
       description: notes,
       image: imageBase64,
     },
-    temperature: parseFloat(steps.value[0]?.temperature || "0"),
-    final_weight: parseFloat(target_weight.value || target_volume.value - 10),
+    temperature: parseFloat(temperature),
+    final_weight: target_weight.value != "0" ? parseFloat(target_weight.value) : parseFloat(target_volume.value) - 10,
     variables: [],
     stages: [],
   };
@@ -209,7 +209,7 @@ function convert() {
 
     if (!isInstant) {
       dynamics.points.push([
-        step.seconds, setPoint 
+        step.seconds, setPoint
       ])
     }
 
@@ -276,7 +276,7 @@ function displayJSON(jsonData) {
   changes_since_last_espresso.value = jsonData.changes_since_last_espresso || '';
   version.value = jsonData.version || '';
   steps.value = jsonData.steps || [];
-  temperature.value = jsonData.steps[0]?.temperature  || 0;
+  temperature.value = jsonData.steps[0]?.temperature || "0";
 
   updateJsonOutput();
   isProfileLoaded.value = true;
