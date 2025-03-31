@@ -34,14 +34,18 @@
 
       <div>
         <label for="steps">Steps:</label>
-        <li v-for="step in steps">
-          <p>Name: {{ step.name }}</p>
-          <p>Type: {{ step.pump }}</p>
-          <p>Transition: {{ step.transition }}</p>
-          <p>Value: {{ step.pump == "pressure" ? step.pressure +" bars": step.flow + " ml/s" }}</p>
-          <p>Limit: {{ step.pump == "pressure" ? step.flow != "" ? step.flow + " ml/s"  : "None" : step.pressure != "" ? step.pressure + " bars"  : "None"}}</p>
-          <p>Exit: {{step.seconds != 127 ? step.seconds + " s" : "No time limit"}} || {{ step.exit? `${step.exit.type} ${step.exit.condition} ${step.exit.value}` : "None"}}</p>
-        </li>
+        <ul class="stepsList">
+          <li v-for="step in steps">
+            <ul class="step">
+              <li class="stepName"><span >Name: </span>{{ step.name }}</li>
+              <li><span>Type: </span>{{ step.pump }}</li>
+              <li><span>Transition: </span>{{ step.transition }}</li>
+              <li><span>Value: </span>{{ step.pump == "pressure" ? step.pressure +" bars": step.flow + " ml/s" }}</li>
+              <li><span>Limit: </span>{{ step.pump == "pressure" ? step.flow != "" ? step.flow + " ml/s"  : "None" : step.pressure != "" ? step.pressure + " bars"  : "None"}}</li>
+              <li><span>Exit: </span>{{step.seconds != 127 ? step.seconds + " s" : "No time limit"}} || {{ step.exit? `${step.exit.type} ${step.exit.condition} ${step.exit.value}` : "None"}}</li>
+            </ul>
+           </li>
+        </ul>
       </div>
 
       <h4>Optional: Select image</h4>
@@ -279,3 +283,31 @@ function displayJSON(jsonData) {
 }
 
 </script>
+
+<style>
+label {
+  font-weight: 800;
+  padding: 1.5em .5em .5em 0;
+}
+ .stepsList li {
+  margin-bottom:3rem;
+}
+
+  .step li{
+    list-style: none;
+    margin:0;
+  }
+  
+  .step li > span {
+    font-weight:600;
+  } 
+
+  .stepName{
+   font-size: 1.2rem;
+   font-weight: 800;
+  }
+  .stepName > span{
+    display: none;
+  }
+
+</style>
