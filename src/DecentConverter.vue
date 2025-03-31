@@ -109,7 +109,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-
+import { v4 as uuid_v4 } from 'uuid';
 // TODO there seems to be some kind of fancy export {data: }... logic? How to use that?
 const title = ref('');
 const author = ref('');
@@ -166,23 +166,19 @@ function handleImageUpload(event) {
 }
 
 function convert() {
-  // Not clean but good enough here
-  function generateUniqueId() {
-    return 'xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx'.replace(/[x]/g, () => (Math.random() * 16 | 0).toString(16));
-  }
 
   const targetJson = {
     name: title,
-    id: generateUniqueId(),
+    id: uuid_v4(),
     author: author,
-    author_id: generateUniqueId(),
+    author_id: uuid_v4(),
     previous_authors: [],
     display: {
       shortDescription: short_description,
       description: notes,
       image: imageBase64,
     },
-    temperature: parseFloat(temperature),
+    temperature: parseFloat(temperature.value),
     final_weight: target_weight.value != "0" ? parseFloat(target_weight.value) : parseFloat(target_volume.value) - 10,
     variables: [],
     stages: [],
@@ -209,7 +205,7 @@ function convert() {
 
     if (!isInstant) {
       dynamics.points.push([
-        step.seconds, setPoint
+        parseFloat(step.seconds), setPoint
       ])
     }
 
@@ -218,7 +214,7 @@ function convert() {
       exit_triggers.push(
         {
               type: "time",
-              value: step.seconds,
+              value: parseFloat(step.seconds),
               relative: true,
               comparison: '>=',
         }
@@ -228,7 +224,7 @@ function convert() {
       exit_triggers.push(
         {
               type: step.exit.type,
-              value: step.exit.value,
+              value: parseFloat(step.exit.value),
               relative: false,
               comparison: step.exit.condition == "over" ? '>=' : '<=',
         }

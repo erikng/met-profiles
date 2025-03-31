@@ -17,5 +17,8 @@
         "@algolia/client-search"
       ]
     }
+  },
+  "dependencies": {
+    "uuid": "^11.1.0"
   }
 }
