@@ -54,9 +54,10 @@
 
       <h4>Export</h4>
       <button>Download/Send/Whatever the Profile</button>
-
-      <p>{{jsonOutput}}</p>
-
+       <code>
+           {{jsonOutput}}
+       </code> 
+      
       <h2>Non exported Decent specifics:</h2>
       <div>
         <label for="version">Profile Definition Version:</label>
@@ -137,6 +138,8 @@ const version = ref('');
 const jsonOutput = ref('');
 const imagePreview = ref(null);
 const imageBase64 = ref('');
+
+
 
 const isProfileLoaded = ref(false);
 
@@ -282,12 +285,17 @@ function displayJSON(jsonData) {
   isProfileLoaded.value = true;
 }
 
+
+
 </script>
 
 <style>
 label {
+  display: inline-block;
   font-weight: 800;
-  padding: 1.5em .5em .5em 0;
+  padding: 0 .2rem;
+  margin-block-start: .8rem;
+
 }
  .stepsList li {
   margin-bottom:3rem;
@@ -309,5 +317,14 @@ label {
   .stepName > span{
     display: none;
   }
+
+  code {
+    display: block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: .8rem;
+
+  }
+
+ 
 
 </style>
