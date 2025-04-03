@@ -34,14 +34,18 @@
 
       <div>
         <label for="steps">Steps:</label>
-        <li v-for="step in steps">
-          <p>Name: {{ step.name }}</p>
-          <p>Type: {{ step.pump }}</p>
-          <p>Transition: {{ step.transition }}</p>
-          <p>Value: {{ step.pump == "pressure" ? step.pressure +" bars": step.flow + " ml/s" }}</p>
-          <p>Limit: {{ step.pump == "pressure" ? step.flow != "" ? step.flow + " ml/s"  : "None" : step.pressure != "" ? step.pressure + " bars"  : "None"}}</p>
-          <p>Exit: {{step.seconds != 127 ? step.seconds + " s" : "No time limit"}} || {{ step.exit? `${step.exit.type} ${step.exit.condition} ${step.exit.value}` : "None"}}</p>
-        </li>
+        <ul class="stepsList">
+          <li v-for="step in steps">
+            <ul class="step">
+              <li class="stepName"><span >Name: </span>{{ step.name }}</li>
+              <li><span>Type: </span>{{ step.pump }}</li>
+              <li><span>Transition: </span>{{ step.transition }}</li>
+              <li><span>Value: </span>{{ step.pump == "pressure" ? step.pressure +" bars": step.flow + " ml/s" }}</li>
+              <li><span>Limit: </span>{{ step.pump == "pressure" ? step.flow != "" ? step.flow + " ml/s"  : "None" : step.pressure != "" ? step.pressure + " bars"  : "None"}}</li>
+              <li><span>Exit: </span>{{step.seconds != 127 ? step.seconds + " s" : "No time limit"}} || {{ step.exit? `${step.exit.type} ${step.exit.condition} ${step.exit.value}` : "None"}}</li>
+            </ul>
+           </li>
+        </ul>
       </div>
 
       <h4>Optional: Select image</h4>
@@ -50,9 +54,10 @@
 
       <h4>Export</h4>
       <button>Download/Send/Whatever the Profile</button>
-
-      <p>{{jsonOutput}}</p>
-
+       <code>
+           {{jsonOutput}}
+       </code> 
+      
       <h2>Non exported Decent specifics:</h2>
       <div>
         <label for="version">Profile Definition Version:</label>
@@ -133,6 +138,8 @@ const version = ref('');
 const jsonOutput = ref('');
 const imagePreview = ref(null);
 const imageBase64 = ref('');
+
+
 
 const isProfileLoaded = ref(false);
 
@@ -278,4 +285,46 @@ function displayJSON(jsonData) {
   isProfileLoaded.value = true;
 }
 
+
+
 </script>
+
+<style>
+label {
+  display: inline-block;
+  font-weight: 800;
+  padding: 0 .2rem;
+  margin-block-start: .8rem;
+
+}
+ .stepsList li {
+  margin-bottom:3rem;
+}
+
+  .step li{
+    list-style: none;
+    margin:0;
+  }
+  
+  .step li > span {
+    font-weight:600;
+  } 
+
+  .stepName{
+   font-size: 1.2rem;
+   font-weight: 800;
+  }
+  .stepName > span{
+    display: none;
+  }
+
+  code {
+    display: block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: .8rem;
+
+  }
+
+ 
+
+</style>
