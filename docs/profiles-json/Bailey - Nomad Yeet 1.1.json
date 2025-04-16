@@ -25,22 +25,22 @@
   "final_weight": 55,
   "variables": [
     {
-        "name": "Preinfusion Flowrate mL/s",
+        "name": "Flow",
         "key": "flow_1",
         "type": "flow",
         "value": 8
     },
     {
-        "name": "Preinfusion Weight Trigger",
-        "key": "weight_1",
-        "type": "weight",
-        "value": 35
-    },
-    {
-        "name": "Yeet Flow Pressure Limit",
+        "name": "Pressure",
         "key": "pressure_1",
         "type": "pressure",
         "value": 4
+    },
+    {
+        "name": "Weight Trigger",
+        "key": "weight_1",
+        "type": "weight",
+        "value": 35
     }
   ],
   "stages": [
