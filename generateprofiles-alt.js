@@ -11,30 +11,35 @@ const outputIndexPath = join(__dirname, 'docs', 'index.md');
 
 async function generateProfilePages() {
   let indexContent = '# Profiles\n\n';
+  const written = [];
+  const skipped = [];
 
   try {
-    await rm(profilesDir, { recursive: true, force: true }); // Delete old profiles
-    await mkdir(profilesDir, { recursive: true }); // Recreate directory
+    await rm(profilesDir, { recursive: true, force: true });
+    await mkdir(profilesDir, { recursive: true });
 
     const files = await readdir(profilesJsonDir);
+    console.log(`Found ${files.length} files in ${profilesJsonDir}`);
 
     for (const file of files) {
-      if (file.endsWith('.json')) {
+      if (!file.endsWith('.json')) continue;
+
+      try {
         const filePath = join(profilesJsonDir, file);
         const jsonData = await readFile(filePath, 'utf8');
+        JSON.parse(jsonData); // early validation
 
-        // Replace spaces with hyphens for filenames
-        const fileName = file.replace('.json', '').replace(/\s+/g, '-');
-        const profileTitle = fileName.replace(/---+/g, ' - ').replace(/(?<!\s)(-+)(?!\s)/g, ' ').trim();
+        const rawName = file.replace('.json', '');
+        const fileName = rawName.replace(/[^\w\-]+/g, '-'); // Safer for FS
+        const profileTitle = rawName;
 
-        // Generate Markdown file with button & input field
         const profileContent = `# ${profileTitle}
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 const baseUrl = ref('');
-const profileData = JSON.parse(\`${jsonData.replace(/'/g, "&apos;")}\`);
+const profileData = JSON.parse(\`${jsonData.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`);
 
 const sendProfile = async () => {
   if (!baseUrl.value.trim()) {
@@ -83,18 +88,29 @@ ${jsonData}
 \`\`\`
 `;
 
-
         const profilePagePath = join(profilesDir, `${fileName}.md`);
         await writeFile(profilePagePath, profileContent);
+        written.push(file);
 
-        // Add link to index.md (encode URI)
         indexContent += `- [${profileTitle}](profiles/${fileName}.md)\n`;
+        console.log(`✅ Wrote: ${fileName}.md`);
+
+      } catch (err) {
+        console.error(`❌ Skipping ${file}: ${err.message}`);
+        skipped.push(file);
       }
     }
 
-    // Write updated index.md
     await writeFile(outputIndexPath, indexContent);
-    console.log('✅ Profiles regenerated and index.md updated!');
+    console.log('\n✅ index.md updated!');
+
+    // Summary
+    console.log(`\n✅ Wrote ${written.length} profiles.`);
+    if (skipped.length) {
+      console.warn(`⚠️ Skipped ${skipped.length} profiles:`);
+      skipped.forEach(name => console.warn(` - ${name}`));
+    }
+
   } catch (error) {
     console.error('❌ Error generating pages:', error);
   }
