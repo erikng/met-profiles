@@ -11,35 +11,41 @@ const outputIndexPath = join(__dirname, 'docs', 'index.md');
 
 async function generateProfilePages() {
   let indexContent = '# Profiles\n\n';
-  const written = [];
-  const skipped = [];
+  const skippedFiles = [];
 
   try {
     await rm(profilesDir, { recursive: true, force: true });
     await mkdir(profilesDir, { recursive: true });
 
     const files = await readdir(profilesJsonDir);
-    console.log(`Found ${files.length} files in ${profilesJsonDir}`);
 
     for (const file of files) {
       if (!file.endsWith('.json')) continue;
 
+      const filePath = join(profilesJsonDir, file);
+
+      let jsonDataRaw;
+      let safeJson;
       try {
-        const filePath = join(profilesJsonDir, file);
-        const jsonData = await readFile(filePath, 'utf8');
-        JSON.parse(jsonData); // early validation
+        jsonDataRaw = await readFile(filePath, 'utf8');
+        const parsed = JSON.parse(jsonDataRaw);
+        safeJson = JSON.stringify(parsed);
+      } catch (error) {
+        console.warn(`⚠️ Skipping "${file}" due to JSON error: ${error.message}`);
+        skippedFiles.push(file);
+        continue;
+      }
 
-        const rawName = file.replace('.json', '');
-        const fileName = rawName.replace(/[^\w\-]+/g, '-'); // Safer for FS
-        const profileTitle = rawName;
+      const fileName = file.replace('.json', '').replace(/\s+/g, '-');
+      const profileTitle = fileName.replace(/---+/g, ' - ').replace(/(?<!\s)(-+)(?!\s)/g, ' ').trim();
 
-        const profileContent = `# ${profileTitle}
+      const profileContent = `# ${profileTitle}
 
 <script setup>
 import { ref } from 'vue';
 
 const baseUrl = ref('');
-const profileData = JSON.parse(\`${jsonData.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`);
+const profileData = JSON.parse(\`${safeJson}\`);
 
 const sendProfile = async () => {
   if (!baseUrl.value.trim()) {
@@ -84,33 +90,24 @@ const sendProfile = async () => {
 </div>
 
 \`\`\`json
-${jsonData}
+${jsonDataRaw}
 \`\`\`
 `;
 
-        const profilePagePath = join(profilesDir, `${fileName}.md`);
-        await writeFile(profilePagePath, profileContent);
-        written.push(file);
+      const profilePagePath = join(profilesDir, `${fileName}.md`);
+      await writeFile(profilePagePath, profileContent);
+      console.log(`✅ Created: ${fileName}.md`);
 
-        indexContent += `- [${profileTitle}](profiles/${fileName}.md)\n`;
-        console.log(`✅ Wrote: ${fileName}.md`);
-
-      } catch (err) {
-        console.error(`❌ Skipping ${file}: ${err.message}`);
-        skipped.push(file);
-      }
+      indexContent += `- [${profileTitle}](profiles/${fileName}.md)\n`;
     }
 
     await writeFile(outputIndexPath, indexContent);
-    console.log('\n✅ index.md updated!');
+    console.log('\n✅ Profiles regenerated and index.md updated!');
 
-    // Summary
-    console.log(`\n✅ Wrote ${written.length} profiles.`);
-    if (skipped.length) {
-      console.warn(`⚠️ Skipped ${skipped.length} profiles:`);
-      skipped.forEach(name => console.warn(` - ${name}`));
+    if (skippedFiles.length > 0) {
+      console.warn(`\n⚠️ Skipped ${skippedFiles.length} file(s) due to JSON errors:`);
+      skippedFiles.forEach(f => console.warn(`- ${f}`));
     }
-
   } catch (error) {
     console.error('❌ Error generating pages:', error);
   }
