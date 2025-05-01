@@ -34,7 +34,7 @@ jobs:
       - name: Run profile generation script
         run: |
           cd ${{ github.workspace }}
-          node generateprofiles-alt.js
+          node generateprofiles.js
       - name: Build with VitePress
         run: npm run build
       - name: Upload artifact
