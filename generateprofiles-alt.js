@@ -44,7 +44,13 @@ async function generateProfilePages() {
       }
 
       // Create safe file name
-      const fileName = file.replace('.json', '').replace(/\s+/g, '-');
+      const fileName = file
+        .replace('.json', '')
+        .replace(/[(),[\]]/g, '')        // remove parens, brackets, commas
+        .replace(/\s+/g, '-')            // spaces to hyphens
+        .replace(/[^a-zA-Z0-9-_]/g, '')  // strip anything else risky
+        .toLowerCase();                  // lowercase for consistency
+
       const profileTitle = fileName.replace(/---+/g, ' - ').replace(/(?<!\s)(-+)(?!\s)/g, ' ').trim();
 
       // Markdown content with embedded Vue script and formatted JSON
