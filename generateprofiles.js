@@ -15,8 +15,8 @@ async function generateProfilePages() {
   const skippedFiles = [];
 
   try {
-    await rm(profilesDir, { recursive: true, force: true }); // Delete old profiles
-    await mkdir(profilesDir, { recursive: true }); // Recreate directory
+    await rm(profilesDir, { recursive: true, force: true });
+    await mkdir(profilesDir, { recursive: true });
 
     const files = await readdir(profilesJsonDir);
 
@@ -30,30 +30,28 @@ async function generateProfilePages() {
         rawJson = await readFile(filePath, 'utf8');
         parsed = JSON.parse(rawJson);
         prettyJson = JSON.stringify(parsed, null, 2);
-        safeJson = JSON.stringify(parsed, null, 2)
-          .replace(/\\/g, '\\\\')     // backslashes
-          .replace(/`/g, '\\`')       // backticks
-          .replace(/\$/g, '\\$')      // dollar signs
-          .replace(/\n/g, '\\n')      // newlines
-          .replace(/\r/g, '\\r')      // carriage returns
-          .replace(/\t/g, '\\t');     // tabs
+        safeJson = prettyJson
+          .replace(/\\/g, '\\\\')
+          .replace(/`/g, '\\`')
+          .replace(/\$/g, '\\$')
+          .replace(/\n/g, '\\n')
+          .replace(/\r/g, '\\r')
+          .replace(/\t/g, '\\t');
       } catch (error) {
         console.warn(`⚠️ Skipping "${file}" due to JSON parse error: ${error.message}`);
         skippedFiles.push(file);
         continue;
       }
 
-      // Create safe file name
-      const fileName = file
-        .replace('.json', '')
-        .replace(/[(),[\]]/g, '')        // remove parens, brackets, commas
-        .replace(/\s+/g, '-')            // spaces to hyphens
-        .replace(/[^a-zA-Z0-9-_]/g, '')  // strip anything else risky
-        .toLowerCase();                  // lowercase for consistency
+      const originalName = file.replace('.json', '');
+      const fileName = originalName
+        .replace(/[(),[\]]/g, '')        
+        .replace(/\s+/g, '-')            
+        .replace(/[^a-zA-Z0-9-_]/g, '')  
+        .toLowerCase();                  
 
-      const profileTitle = fileName.replace(/---+/g, ' - ').replace(/(?<!\s)(-+)(?!\s)/g, ' ').trim();
+      const profileTitle = originalName; // original for display
 
-      // Markdown content with embedded Vue script and formatted JSON
       const profileContent = `# ${profileTitle}
 
 <script setup>
@@ -113,13 +111,11 @@ ${prettyJson}
       await writeFile(profilePagePath, profileContent);
       createdFiles.push(fileName);
 
-      // Add link to index
       indexContent += `- [${profileTitle}](profiles/${fileName}.md)\n`;
     }
 
     await writeFile(outputIndexPath, indexContent);
 
-    // Final console output
     console.log('✅ Profiles regenerated and index.md updated!');
     if (createdFiles.length) {
       console.log(`📝 Created ${createdFiles.length} profile page(s):`);
